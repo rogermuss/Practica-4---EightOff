@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eightoff_gui.MenuController">
+    <children>
+        <Rectangle height="600" width="800">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.843137264251709" green="0.4274509847164154" blue="0.4274509847164154" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.8509804010391235" green="0.7568627595901489" blue="0.7568627595901489" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill></Rectangle>
+
+        <Circle centerX="400" centerY="300" radius="200">
+            <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.6">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.567300021648407" green="0.9300000071525574" blue="0.9042243957519531" opacity="0.6000000238418579" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.6">
+                     <color>
+                        <Color red="0.38999998569488525" opacity="0.20000000298023224" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.9176470637321472" green="0.6235294342041016" blue="0.6235294342041016" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+            </fill>
+            <effect>
+                <BoxBlur height="20" iterations="3" width="20" />
+            </effect>
+        </Circle>
+
+        <Label layoutX="298.0" layoutY="52.0" style="-fx-text-fill: white; -fx-font-size: 48px; -fx-font-weight: bold;" text="Eight Off" textFill="WHITE">
+            <effect>
+                <DropShadow color="rgba(0,0,0,0.7)" radius="4" />
+            </effect>
+        </Label>
+
+        <StackPane fx:id="playCard" layoutX="232.0" layoutY="235.0" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <effect>
+                <DropShadow color="rgba(0,0,0,0.3)" offsetX="0" offsetY="4" radius="8" />
+            </effect>
+            <rotationAxis>
+                <javafx.geometry.Point3D x="0" y="0" z="1" />
+            </rotationAxis>
+            <rotate>-5</rotate>
+
+            <children>
+                <Label style="-fx-text-fill: #d40000; -fx-font-weight: bold;" text="A♥" StackPane.alignment="TOP_LEFT">
+                    <padding>
+                        <Insets left="10" top="10" />
+                    </padding>
+                </Label>
+
+                <Label style="-fx-text-fill: #d40000; -fx-font-size: 40; -fx-font-weight: bold;" text="♥" StackPane.alignment="CENTER" />
+
+                <Label style="-fx-text-fill: #d40000; -fx-font-weight: bold;" text="A♥" StackPane.alignment="BOTTOM_RIGHT">
+                    <padding>
+                        <Insets bottom="10" right="10" />
+                    </padding>
+                    <rotate>180</rotate>
+                </Label>
+
+                <Label style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.7); -fx-background-radius: 20; -fx-padding: 8 16; -fx-font-weight: bold;" text="PLAY" StackPane.alignment="BOTTOM_CENTER">
+                    <translateY>40</translateY>
+                </Label>
+            </children>
+        </StackPane>
+
+        <StackPane fx:id="exitCard" layoutX="446.0" layoutY="235.0" prefHeight="58.0" prefWidth="152.0" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <effect>
+                <DropShadow color="rgba(0,0,0,0.3)" offsetX="0" offsetY="4" radius="8" />
+            </effect>
+            <rotationAxis>
+                <javafx.geometry.Point3D x="0" y="0" z="1" />
+            </rotationAxis>
+            <rotate>5</rotate>
+
+            <children>
+                <Label style="-fx-text-fill: black; -fx-font-weight: bold;" text="A♠" StackPane.alignment="TOP_LEFT">
+                    <padding>
+                        <Insets left="10" top="10" />
+                    </padding>
+                </Label>
+
+                <Label style="-fx-text-fill: black; -fx-font-size: 40; -fx-font-weight: bold;" text="♠" StackPane.alignment="CENTER" />
+
+                <Label style="-fx-text-fill: black; -fx-font-weight: bold;" text="A♠" StackPane.alignment="BOTTOM_RIGHT">
+                    <padding>
+                        <Insets bottom="10" right="10" />
+                    </padding>
+                    <rotate>180</rotate>
+                </Label>
+
+                <Label style="-fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.7); -fx-background-radius: 20; -fx-padding: 8 16; -fx-font-weight: bold;" text="EXIT!" StackPane.alignment="BOTTOM_CENTER">
+                    <translateY>40</translateY>
+                </Label>
+            </children>
+        </StackPane>
+    </children>
+</AnchorPane>

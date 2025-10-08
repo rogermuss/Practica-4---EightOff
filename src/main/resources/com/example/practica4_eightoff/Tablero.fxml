@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="Tablero" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eightoff_gui.EightOffVisualController">
+   <children>
+      <Rectangle height="688.0" smooth="false" width="831.0">
+         <fill>
+            <LinearGradient endX="0.5" endY="1.0" startX="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.843137264251709" green="0.4274509847164154" blue="0.4274509847164154" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.8509804010391235" green="0.7568627595901489" blue="0.7568627595901489" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
+      <Circle centerX="400" centerY="300" layoutX="12.0" layoutY="44.0" radius="200">
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.6">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.567300021648407" green="0.9300000071525574" blue="0.9042243957519531" opacity="0.6000000238418579" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006729475100942127">
+                     <color>
+                        <Color red="0.567300021648407" green="0.9300000071525574" blue="0.9042243957519531" opacity="0.6000000238418579" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.6">
+                     <color>
+                        <Color red="0.38999998569488525" opacity="0.20000000298023224" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.9176470637321472" green="0.6235294342041016" blue="0.6235294342041016" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </fill>
+         <effect>
+            <BoxBlur height="20" iterations="3" width="20" />
+         </effect>
+      </Circle>
+      <VBox id="t1" fx:id="t1" fillWidth="false" layoutX="14.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t2" fx:id="t2" fillWidth="false" layoutX="95.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t3" fx:id="t3" fillWidth="false" layoutX="178.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t4" fx:id="t4" fillWidth="false" layoutX="258.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t5" fx:id="t5" fillWidth="false" layoutX="334.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t6" fx:id="t6" fillWidth="false" layoutX="410.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t7" fx:id="t7" fillWidth="false" layoutX="488.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t7" fx:id="t8" fillWidth="false" layoutX="566.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <VBox id="t7" fx:id="f1" fillWidth="false" layoutX="747.0" layoutY="159.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 180, 211);" />
+      <VBox id="t7" fx:id="f2" fillWidth="false" layoutX="747.0" layoutY="278.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 180, 211);" />
+      <VBox id="t7" fx:id="f3" fillWidth="false" layoutX="747.0" layoutY="392.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 180, 211);" />
+      <VBox id="t7" fx:id="f4" fillWidth="false" layoutX="747.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 180, 211);" />
+      <ButtonBar fx:id="buttonBar" layoutX="315.0" layoutY="634.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="193.0">
+        <buttons>
+          <Button fx:id="menu" mnemonicParsing="false" style="-fx-background-color: rgb(255, 191, 0);" text="Menu">
+               <font>
+                  <Font name="Verdana" size="13.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.5" endY="1.0" startX="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.7473683953285217" green="0.22697855532169342" blue="0.08304093778133392" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.6">
+                           <color>
+                              <Color red="0.9100000262260437" green="0.045499999076128006" blue="0.045499999076128006" opacity="0.20000000298023224" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.9052631855010986" green="0.03017543815076351" blue="0.03017543815076351" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+            <Button fx:id="newGame" mnemonicParsing="false" style="-fx-background-color: rgb(173, 216, 230);" text="New Game" textAlignment="CENTER">
+               <font>
+                  <Font name="Verdana" size="12.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.5" endY="1.0" startX="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.567300021648407" green="0.9300000071525574" blue="0.9042243957519531" opacity="0.6000000238418579" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.006729475100942127">
+                           <color>
+                              <Color opacity="0.6000000238418579" />
+                           </color>
+                        </Stop>
+                        <Stop offset="0.6">
+                           <color>
+                              <Color red="0.38999998569488525" opacity="0.20000000298023224" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.8298947215080261" green="0.6252631545066833" blue="0.8526315689086914" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+        </buttons>
+      </ButtonBar>
+      <Circle fx:id="undoButton" layoutX="732.0" layoutY="573.0" radius="47.0" stroke="#c9b7b7" strokeType="INSIDE">
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.6">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.567300021648407" green="0.9300000071525574" blue="0.9042243957519531" opacity="0.6000000238418579" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006729475100942127">
+                     <color>
+                        <Color red="0.567300021648407" green="0.9300000071525574" blue="0.9042243957519531" opacity="0.6000000238418579" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.6">
+                     <color>
+                        <Color red="0.38999998569488525" opacity="0.20000000298023224" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.8298947215080261" green="0.6252631545066833" blue="0.8526315689086914" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </fill></Circle>
+      <Text fx:id="undoText" fill="WHITE" fontSmoothingType="LCD" layoutX="702.0" layoutY="582.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Undo" textAlignment="CENTER">
+         <font>
+            <Font name="Verdana" size="23.0" />
+         </font>
+      </Text>
+      <StackPane fx:id="zonaDescarte1" layoutX="14.0" layoutY="42.0" onMouseClicked="#manejarClicPozo" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte2" layoutX="95.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte3" layoutX="180.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte4" layoutX="258.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte5" layoutX="334.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte6" layoutX="410.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte7" layoutX="488.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte8" layoutX="566.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+
+   </children>
+</AnchorPane>

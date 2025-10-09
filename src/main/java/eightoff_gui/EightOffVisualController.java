@@ -8,13 +8,16 @@ import eightoff_logica.TableroLogico;
 import eightoff_logica.WasteZone;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import lista_circular_simple.ListaCircularSimple;
 
 import java.io.IOException;
@@ -25,6 +28,7 @@ public class EightOffVisualController {
     private Manager manager;
     private Estado respaldo = null;
     private StackPane cartaSeleccionada = null;
+    private ListaCircularSimple<CartaInglesa> cartasLogicas = new ListaCircularSimple<>();
     private ArrayList<StackPane> cartasSeleccionadas = new ArrayList<>(); // Para múltiples cartas
     private javafx.scene.Parent contenedorOrigen = null; // Cambiar de VBox a Parent
     private double offsetX, offsetY;
@@ -77,24 +81,24 @@ public class EightOffVisualController {
     private void initialize() throws IOException {
 
         //Agregar Hover Botones.
-        //hoverBoton(menu);
-        //hoverBoton(newGame);
+        hoverBoton(menu);
+        hoverBoton(newGame);
 
         //El texto no toma los eventos
         undoText.setMouseTransparent(true);
 
         //Accion undo
-        //undoClick();
+        undoClick();
 
         //Agrega hover
-        //hoverUndo();
+        hoverUndo();
 
         menu.setOnAction(e -> {
-            //regrearAlMenu();
+            regrearAlMenu();
         });
 
         newGame.setOnAction(e -> {
-            //reiniciarJuego();
+            reiniciarJuego();
         });
 
         // Configurar VBoxes primero
@@ -109,8 +113,12 @@ public class EightOffVisualController {
         //Actualiza las cartas a partir del tablero logico
         actualizarCartas();
 
-        // Configurar eventos drag and drop
-        //configurarCartasAlTomarYSoltar();
+        //Agrego Accion de Tomar
+        setDraggable();
+
+        //Agrego Accion de Soltaar
+        setDragReleased();
+
     }
 
     //Configuro que tanto se espacian las cartas en vertical.
@@ -221,10 +229,13 @@ public class EightOffVisualController {
                     if (labelTop.getText().equals(tLogico.get(i).toString())) {
                         if(!tLogico.get(i).isFaceup()){
                             carta.setOpacity(0.5);
+                            quitarHover(carta); // ✅ Quitar hover si está boca abajo
                         } else{
+                            carta.setOpacity(1);
                             agregarHover(carta);
                         }
                         t.getChildren().add(carta);
+                        break; // ✅ IMPORTANTE: Evitar duplicados
                     }
                 }
             }
@@ -239,7 +250,10 @@ public class EightOffVisualController {
                 for (StackPane carta : cartasGraficas) {
                     Label labelTop = (Label) carta.lookup("#LabelTop");
                     if (labelTop.getText().equals(fLogico.get(i).toString())) {
+                        carta.setOpacity(1);
+                        quitarHover(carta); // ✅ Foundation no es draggable
                         f.getChildren().add(carta);
+                        break; // ✅ IMPORTANTE
                     }
                 }
             }
@@ -254,16 +268,18 @@ public class EightOffVisualController {
                 for (StackPane carta : cartasGraficas) {
                     Label labelTop = (Label) carta.lookup("#LabelTop");
                     if (labelTop.getText().equals(cartaLogica.toString())) {
-                        if(cartaLogica.isFaceup()){
-                            agregarHover(carta);
-                        }
+                        carta.setOpacity(1);
+                        agregarHover(carta); // ✅ SIEMPRE agregar hover en WasteZone
                         wz.getChildren().add(carta);
+                        break; // ✅ IMPORTANTE
                     }
                 }
             }
             indexWasteZone++;
         }
     }
+
+
 
     public boolean isDraggable(StackPane cartaSeleccionada){
         if(cartaSeleccionada.getOpacity() == 1.0){
@@ -277,7 +293,23 @@ public class EightOffVisualController {
         return false;
     }
 
+    public void regrearAlMenu(){
+        manager = new Manager((Stage) t1.getScene().getWindow());
+        try {
+            manager.iniciarEscenaMenu();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
+    public void reiniciarJuego(){
+        manager = new Manager((Stage) t1.getScene().getWindow());
+        try {
+            manager.iniciarEscenaJuego();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
 
     //Agrega hover
@@ -285,16 +317,16 @@ public class EightOffVisualController {
         carta.setOnMouseEntered(event -> {
             carta.setStyle("-fx-background-color: #f0f0f0;" +
                     "-fx-background-radius: 10;" +
-                    "-fx-border-color: #d8b7dd;" +   // Morado pastel
+                    "-fx-border-color: #d8b7dd;" +
                     "-fx-border-radius: 10;" +
                     "-fx-border-width: 2;" +
-                    "-fx-effect: dropshadow(gaussian, #d8b7dd, 10, 0.5, 0, 0);"); // Sombra morada pastel
+                    "-fx-effect: dropshadow(gaussian, #d8b7dd, 10, 0.5, 0, 0);");
         });
 
         carta.setOnMouseExited(event -> {
             carta.setStyle("-fx-background-color: white;" +
                     "-fx-background-radius: 10;" +
-                    "-fx-border-color: #c39bd3;" +   // Borde morado pastel normal
+                    "-fx-border-color: #c39bd3;" +
                     "-fx-border-radius: 10;" +
                     "-fx-border-width: 1;" +
                     "-fx-effect: null;");
@@ -309,18 +341,339 @@ public class EightOffVisualController {
         // También restaurar estilo normal
         carta.setStyle("-fx-background-color: white;" +
                 "-fx-background-radius: 10;" +
-                "-fx-border-color: #c39bd3;" +   // Borde morado pastel normal
+                "-fx-border-color: #c39bd3;" +
                 "-fx-border-radius: 10;" +
                 "-fx-border-width: 1;" +
                 "-fx-effect: null;");
     }
 
-
-
-    public void configurarCartasAlTomarYSoltar(){
-
+    //Da hover a los botones de accion
+    public void hoverBoton(Button boton) {
+        String estiloBoton = boton.getStyle();
+        boton.setOnMouseEntered(event -> {
+            boton.setStyle("-fx-background-color: #f4a7a3;" +
+                    "-fx-background-radius: 10;" +
+                    "-fx-border-color: #e68b88;" +
+                    "-fx-border-radius: 10;" +
+                    "-fx-border-width: 2;" +
+                    "-fx-effect: dropshadow(gaussian, #f2b1ad, 10, 0.5, 0, 0);");
+        });
+        boton.setOnMouseExited(event -> {
+            boton.setStyle(estiloBoton);
+        });
     }
 
+
+    //Hover undo
+    public void hoverUndo() {
+        //Hover UNDO
+        undoButton.setOnMouseEntered(e -> {
+            undoButton.setStyle("-fx-background-color: #fff9b0;" + // Amarillo pastel claro
+                    "-fx-background-radius: 10;" +
+                    "-fx-border-color: #e6d86b;" + // Borde amarillo pastel más oscuro
+                    "-fx-border-radius: 10;" +
+                    "-fx-border-width: 2;" +
+                    "-fx-effect: dropshadow(gaussian, #fff6a1, 10, 0.5, 0, 0);"); // Sombra amarilla suave
+        });
+
+        undoButton.setOnMouseExited(e -> {
+            undoButton.setStyle("-fx-background-color: #28220f;" +
+                    "-fx-background-radius: 10;" +
+                    "-fx-border-color: #e6d86b;" + // Mantiene borde amarillo pastel sutil
+                    "-fx-border-radius: 10;" +
+                    "-fx-border-width: 2;");
+        });
+    }
+
+    //Evento undo al hacer click
+    public void undoClick(){
+        //Regresa un movimiento
+        undoButton.setOnMouseClicked(e -> {
+
+        });
+    }
+
+    //Guardado del estado
+    public void undoSave(){
+        Estado estado;
+    }
+
+
+
+    private void limpiarGUI() {
+        for(VBox t : tableaus) {
+            t.getChildren().clear();
+        }
+        for(VBox f : foundations) {
+            f.getChildren().clear();
+        }
+        for(StackPane w : wasteZone) {
+            w.getChildren().clear();
+        }
+    }
+
+    private void limpiarSeleccion() {
+        cartasLogicas = null;
+        cartaSeleccionada = null;
+        cartasSeleccionadas.clear();
+        contenedorOrigen = null;
+    }
+
+
+
+
+
+
+    public CartaInglesa encontrarCartaSeleccionada(StackPane carta){
+        FoundationDeck[] foundationDecks = tableroLogico.getFoundationDecks();
+        TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
+        WasteZone[] wasteZones = tableroLogico.getWasteZones();
+        Label labelTop = (Label) carta.lookup("#LabelTop");
+
+        for(FoundationDeck foundationDeck:foundationDecks){
+            ListaCircularSimple<CartaInglesa> cartas = foundationDeck.getFoundation();
+            for(int i=0;i<cartas.size();i++){
+                if(cartas.get(i).toString().equals(labelTop.getText())){
+                    return cartas.get(i);
+                }
+            }
+        }
+
+        for(TableauDeck tableauDeck:tableauDecks){
+            ListaCircularSimple<CartaInglesa> cartas = tableauDeck.getTableau();
+            for(int i=0;i<cartas.size();i++){
+                if(cartas.get(i).toString().equals(labelTop.getText())){
+                    return cartas.get(i);
+                }
+            }
+        }
+
+        for(WasteZone wasteZone:wasteZones){
+            if(wasteZone.getCarta() != null &&
+                    wasteZone.getCarta().toString().equals(labelTop.getText())){
+                return wasteZone.getCarta();
+            }
+        }
+        return null;
+    }
+
+
+    public VBox reachTableauOrFoundation(MouseEvent e){
+        for(VBox f:foundations){
+            if(f.getLayoutX() <= e.getSceneX() && f.getLayoutX()+f.getWidth() >= e.getSceneX()
+                    && f.getLayoutY() <= e.getSceneY() && f.getLayoutY()+f.getHeight() >= e.getSceneY()){
+                return f;
+            }
+        }
+
+        for(VBox t:tableaus){
+            if(t.getLayoutX() <= e.getSceneX() && t.getLayoutX()+t.getWidth() >= e.getSceneX()
+                    && t.getLayoutY() <= e.getSceneY() && t.getLayoutY()+t.getHeight() >= e.getSceneY()){
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+    public StackPane reachWasteZone(MouseEvent e){
+        for (StackPane w:wasteZone){
+            if(w.getLayoutX() <= e.getSceneX() && w.getLayoutX()+w.getWidth() >= e.getSceneX()
+                    && w.getLayoutY() <= e.getSceneY() && w.getLayoutY()+w.getHeight() >= e.getSceneY()){
+                return w;
+            }
+        }
+
+        return null;
+    }
+
+    public void setDraggable(){
+        for(StackPane carta:cartasGraficas){
+            carta.setOnMousePressed(event -> {
+                if(isDraggable(carta)){
+                    cartaSeleccionada = carta;
+
+                    identificarOrigenYCartas(carta);
+
+                    for(StackPane c:cartasSeleccionadas){
+                        c.setStyle(c.getStyle() +
+                                "-fx-effect: dropshadow(gaussian, purple, 15, 0.8, 0, 0);");
+                    }
+
+                    contenedorOrigen = carta.getParent();
+                    event.consume();
+                }
+            });
+        }
+    }
+
+    public void setDragReleased(){
+        for(StackPane carta:cartasGraficas){
+            carta.setOnMouseReleased(event -> {
+                if(carta == cartaSeleccionada) {
+                    boolean movimientoExitoso = false;
+
+                    VBox contenedorVBox = reachTableauOrFoundation(event);
+                    StackPane contenedorStackPane = reachWasteZone(event);
+
+                    if(contenedorVBox != null) {
+                        // Mover a Foundation
+                        if(foundations.contains(contenedorVBox)) {
+                            int indice = foundations.indexOf(contenedorVBox);
+                            FoundationDeck[] foundationDecks = tableroLogico.getFoundationDecks();
+                            FoundationDeck fLogico = foundationDecks[indice];
+
+                            // Solo mover la primera carta a Foundation
+                            if(cartasLogicas.size() == 1 &&
+                                    fLogico.ingresarCarta(cartasLogicas.get(0))){
+                                removerLogicaOrigen();
+                                movimientoExitoso = true;
+                            }
+                        }
+                        // Mover a Tableau
+                        else if(tableaus.contains(contenedorVBox)) {
+                            int indice = tableaus.indexOf(contenedorVBox);
+                            TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
+                            TableauDeck tLogico = tableauDecks[indice];
+
+                            if(tLogico.insertarCartas(cartasLogicas)) {
+                                removerLogicaOrigen();
+                                movimientoExitoso = true;
+                            }
+                        }
+                    }
+                    // Mover a WasteZone
+                    else if(contenedorStackPane != null) {
+                        int indice = wasteZone.indexOf(contenedorStackPane);
+                        WasteZone[] wasteZones = tableroLogico.getWasteZones();
+                        WasteZone wLogico = wasteZones[indice];
+
+                        // Solo cartas únicas a WasteZone
+                        if(cartasLogicas.size() == 1 && wLogico.getCarta() == null){
+                            wLogico.setCarta(cartasLogicas.get(0));
+                            removerLogicaOrigen();
+                            movimientoExitoso = true;
+                        }
+                    }
+
+
+                    // Actualizar toda la GUI
+                    try {
+                        limpiarGUI();
+                        actualizarCartas();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Limpiar selección
+                    limpiarSeleccion();
+                    event.consume();
+                }
+            });
+        }
+    }
+
+    public ListaCircularSimple<CartaInglesa> obtenerCartasEnSecuencia(StackPane carta){
+        ListaCircularSimple<CartaInglesa> logicCardsList = new ListaCircularSimple<>();
+        TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
+        Label labelTop = (Label) carta.lookup("#LabelTop");
+
+        for(int j=0; j<tableauDecks.length; j++) {
+            ListaCircularSimple<CartaInglesa> tLogico = tableauDecks[j].getTableau();
+            for (int i = 0; i < tLogico.size(); i++) {
+                if (tLogico.get(i).toString().equals(labelTop.getText())) {
+                    logicCardsList = tableauDecks[j].removerCartas(tLogico.get(i));
+                    break;
+                }
+            }
+            if(!logicCardsList.isEmpty()) break;
+        }
+
+        for(int i = 0; i < logicCardsList.size(); i++){
+            for(StackPane c : cartasGraficas){
+                Label label = (Label) c.lookup("#LabelTop");
+                if(logicCardsList.get(i).toString().equals(label.getText())){
+                    cartasSeleccionadas.add(c);
+                    break;
+                }
+            }
+        }
+
+        return logicCardsList;
+    }
+
+    private void identificarOrigenYCartas(StackPane carta) {
+        cartasSeleccionadas.clear();
+        cartasLogicas = new ListaCircularSimple<>();
+
+        Label labelTop = (Label) carta.lookup("#LabelTop");
+        TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
+
+        for(int j=0; j<tableauDecks.length; j++) {
+            ListaCircularSimple<CartaInglesa> tLogico = tableauDecks[j].getTableau();
+            for (int i = 0; i < tLogico.size(); i++) {
+                if (tLogico.get(i).toString().equals(labelTop.getText())) {
+                    for(int k = i; k < tLogico.size(); k++) {
+                        cartasLogicas.insertaFin(tLogico.get(k));
+                    }
+
+                    for(int m = 0; m < cartasLogicas.size(); m++){
+                        for(StackPane c : cartasGraficas){
+                            Label label = (Label) c.lookup("#LabelTop");
+                            if(cartasLogicas.get(m).toString().equals(label.getText())){
+                                cartasSeleccionadas.add(c);
+                                break;
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+
+        CartaInglesa cartaLogica = encontrarCartaSeleccionada(carta);
+        if(cartaLogica != null) {
+            cartasLogicas.insertaFin(cartaLogica);
+            cartasSeleccionadas.add(carta);
+        }
+    }
+
+
+
+    // remover de la lógica
+    public void removerLogicaOrigen(){
+        if(contenedorOrigen != null){
+            Label labelTop = (Label) cartaSeleccionada.lookup("#LabelTop");
+
+            if(contenedorOrigen instanceof StackPane){
+                StackPane contenedor = (StackPane) contenedorOrigen;
+                int index = wasteZone.indexOf(contenedor);
+                WasteZone[] wasteZones = tableroLogico.getWasteZones();
+                wasteZones[index].removerCarta();
+            }
+            else if (contenedorOrigen instanceof VBox) {
+                VBox vBox = (VBox) contenedorOrigen;
+
+                if(foundations.contains(vBox)) {
+                    int index = foundations.indexOf(vBox);
+                    FoundationDeck[] foundationDecks = tableroLogico.getFoundationDecks();
+                    foundationDecks[index].removerUltimaCarta();
+                }
+                else if(tableaus.contains(vBox)) {
+                    int index = tableaus.indexOf(vBox);
+                    TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
+                    TableauDeck tLogico = tableauDecks[index];
+
+                    for(int i = 0; i < tLogico.getTableau().size(); i++) {
+                        if(tLogico.getTableau().get(i).toString().equals(labelTop.getText())) {
+                            tLogico.removerCartas(tLogico.getTableau().get(i));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 

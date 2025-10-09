@@ -12,17 +12,20 @@ public class FoundationDeck {
         foundation = new ListaCircularSimple<>();
     }
 
-    public void ingresarCarta(CartaInglesa card) {
+    public boolean ingresarCarta(CartaInglesa card) {
         if(foundation.isEmpty()){
             if(card.getValorEnum() == Carta.ValorEnum.AS){
                 foundation.insertaFin(card);
+                return true;
             }
         }
         else{
             if(foundation.get(foundation.size() - 1).compareTo(card) == -1){
                 foundation.insertaFin(card);
+                return  true;
             }
         }
+        return false;
     }
 
     public CartaInglesa removerUltimaCarta(){

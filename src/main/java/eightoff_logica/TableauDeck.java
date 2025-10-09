@@ -13,20 +13,23 @@ public class TableauDeck {
         tableau = new ListaCircularSimple<>();
     }
 
-    public void insertarCartas(ListaCircularSimple<CartaInglesa> cartas){
+    public boolean insertarCartas(ListaCircularSimple<CartaInglesa> cartas){
         if(tableau.isEmpty()){
-            if(cartas.get(cartas.size()-1).getValorEnum() == Carta.ValorEnum.K){
-                for (int i = cartas.size()-1; i >= 0; i--){
+            if(cartas.get(0).getValorEnum() == Carta.ValorEnum.K){
+                for (int i = 0; i < cartas.size(); i++){
                     tableau.insertaFin(cartas.get(i));
                 }
+                return true;
             }
-        } else{
-            if(tableau.get(tableau.size() - 1).compareTo(cartas.get(cartas.size()-1)) == 1) {
-                for (int i = cartas.size()-1; i >= 0; i--){
+        } else {
+            if(tableau.get(tableau.size() - 1).compareTo(cartas.get(0)) == 1) {
+                for (int i = 0; i < cartas.size(); i++){
                     tableau.insertaFin(cartas.get(i));
                 }
+                return true;
             }
         }
+        return false;
     }
 
     public void insertarCarta(CartaInglesa carta){
@@ -53,15 +56,25 @@ public class TableauDeck {
 
     public ListaCircularSimple<CartaInglesa> removerCartas(CartaInglesa carta){
         if(contains(carta)){
-           ListaCircularSimple<CartaInglesa> cartas = new ListaCircularSimple<>();
-           int indexCartaSeleccionada = getCardIndex(carta);
-           for(int i = indexCartaSeleccionada; i<tableau.size(); i++){
-               cartas.insertaFin(tableau.get(i));
-           }
-           for(int i = tableau.size()-1; i>indexCartaSeleccionada; i--){
-               tableau.eliminaFin();
-           }
-           return cartas;
+            ListaCircularSimple<CartaInglesa> cartas = new ListaCircularSimple<>();
+            int indexCartaSeleccionada = getCardIndex(carta);
+
+            // Copiar cartas desde la seleccionada hasta el final
+            for(int i = indexCartaSeleccionada; i < tableau.size(); i++){
+                cartas.insertaFin(tableau.get(i));
+            }
+
+            // Eliminar desde el final hasta la carta seleccionada (INCLUSIVE)
+            for(int i = tableau.size()-1; i >= indexCartaSeleccionada; i--){
+                tableau.eliminaFin();
+            }
+
+            // Si quedan cartas, voltear la última
+            if(!tableau.isEmpty()){
+                tableau.get(tableau.size()-1).makeFaceUp();
+            }
+
+            return cartas;
         }
         return null;
     }

@@ -10,6 +10,9 @@ public class CartaInglesa extends Carta {
     public CartaInglesa(int valor, Palo figura, String color) {
         super(valor, figura, color);
     }
+    public CartaInglesa(CartaInglesa original) {
+        super(original);
+    }
 
     @Override
     public int compareTo(Carta o) {

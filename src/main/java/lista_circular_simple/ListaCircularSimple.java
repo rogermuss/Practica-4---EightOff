@@ -8,6 +8,18 @@ public class ListaCircularSimple<T> {
         inicio = null;
         fin = null;
     }
+    public ListaCircularSimple(ListaCircularSimple<T> copia) {
+        this.inicio = null;
+        this.fin = null;
+
+        if (copia.inicio != null) {
+            Nodo<T> actual = copia.inicio;
+            do {
+                this.insertaFin(actual.getInfo()); // copia el valor, no el nodo
+                actual = actual.getSiguiente();
+            } while (actual != copia.inicio);
+        }
+    }
 
     public int size(){
         if(inicio == null){

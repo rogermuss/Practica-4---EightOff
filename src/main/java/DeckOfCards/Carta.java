@@ -51,7 +51,16 @@ public abstract class Carta implements Comparable<Carta> {
         faceup = false;
     }
 
+    public Carta(Carta original) {
+        this.valorEnum = original.getValorEnum();
+        this.palo = original.getPalo();
+        this.color = original.getColor();
+        this.faceup = original.isFaceup();
+        this.valor = original.getValor();
+        this.valorBajo = original.getValorBajo();
 
+        // Copiar cualquier otro atributo necesario
+    }
 
     /**
      * Voltea una carta para que NO se vea su contenido.

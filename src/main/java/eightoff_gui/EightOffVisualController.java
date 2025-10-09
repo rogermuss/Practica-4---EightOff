@@ -10,7 +10,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -33,6 +35,8 @@ public class EightOffVisualController {
     private javafx.scene.Parent contenedorOrigen = null; // Cambiar de VBox a Parent
     private double offsetX, offsetY;
     private ArrayList<StackPane> cartasGraficas = new ArrayList<>();
+    private ListaCircularSimple<Estado> listaEstados = new ListaCircularSimple<>();
+
 
     // Undo
     @FXML Circle undoButton;
@@ -262,16 +266,19 @@ public class EightOffVisualController {
 
         int indexWasteZone = 0;
         for(StackPane wz:wasteZone){
+
             WasteZone[] wasteZones = tableroLogico.getWasteZones();
-            CartaInglesa cartaLogica = wasteZones[indexWasteZone].getCarta();
-            if(cartaLogica!=null) {
-                for (StackPane carta : cartasGraficas) {
-                    Label labelTop = (Label) carta.lookup("#LabelTop");
-                    if (labelTop.getText().equals(cartaLogica.toString())) {
-                        carta.setOpacity(1);
-                        agregarHover(carta);
-                        wz.getChildren().add(carta);
-                        break;
+            if(wasteZones[indexWasteZone].getCarta() != null) {
+                CartaInglesa cartaLogica = wasteZones[indexWasteZone].getCarta();
+                if (cartaLogica != null) {
+                    for (StackPane carta : cartasGraficas) {
+                        Label labelTop = (Label) carta.lookup("#LabelTop");
+                        if (labelTop.getText().equals(cartaLogica.toString())) {
+                            carta.setOpacity(1);
+                            agregarHover(carta);
+                            wz.getChildren().add(carta);
+                            break;
+                        }
                     }
                 }
             }
@@ -291,6 +298,34 @@ public class EightOffVisualController {
             return true;
         }
         return false;
+    }
+
+    public boolean verificarVictoria(){
+        int contVictoria = 0;
+        for(VBox f:foundations){
+            if(f.getChildren().size() == 13){
+                contVictoria++;
+            }
+        }
+        return contVictoria == 4;
+    }
+
+    private void mostrarMensajeVictoria() {
+        Alert alert = new Alert(
+                Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Felicitaciones!");
+        alert.setHeaderText("Has ganado!");
+        alert.setContentText("Completaste Solitario!\n¿Quieres jugar otra vez?");
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                reiniciarJuego();
+            }
+            if (response == ButtonType.NO) {
+                regrearAlMenu();
+            }
+        });
     }
 
     public void regrearAlMenu(){
@@ -389,13 +424,27 @@ public class EightOffVisualController {
     public void undoClick(){
         //Regresa un movimiento
         undoButton.setOnMouseClicked(e -> {
+            if(!listaEstados.isEmpty()){
+                Estado estado = listaEstados.eliminaFin();
+                tableroLogico.setFoundationDecks(tableroLogico.clonarFoundationDecks(estado.getFoundationDecks()));
+                tableroLogico.setTableauDecks(tableroLogico.clonarTableauDecks(estado.getTableauDecks()));
+                tableroLogico.setWasteZones(estado.getWasteZones());
 
+                limpiarGUI();
+                try {
+                    actualizarCartas();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         });
     }
 
     //Guardado del estado
     public void undoSave(){
-        Estado estado;
+        Estado estado = new  Estado(tableroLogico.getTableauDecks(),
+                tableroLogico.getFoundationDecks(), tableroLogico.getWasteZones());
+        listaEstados.insertaFin(estado);
     }
 
 
@@ -511,12 +560,12 @@ public class EightOffVisualController {
         for(StackPane carta:cartasGraficas){
             carta.setOnMouseReleased(event -> {
                 if(carta == cartaSeleccionada) {
-                    boolean movimientoExitoso = false;
 
                     VBox contenedorVBox = reachTableauOrFoundation(event);
                     StackPane contenedorStackPane = reachWasteZone(event);
 
                     if(contenedorVBox != null) {
+                        undoSave();
                         // Mover a Foundation
                         if(foundations.contains(contenedorVBox)) {
                             int indice = foundations.indexOf(contenedorVBox);
@@ -527,7 +576,6 @@ public class EightOffVisualController {
                             if(cartasLogicas.size() == 1 &&
                                     fLogico.ingresarCarta(cartasLogicas.get(0))){
                                 removerLogicaOrigen();
-                                movimientoExitoso = true;
                             }
                         }
                         // Mover a Tableau
@@ -538,12 +586,12 @@ public class EightOffVisualController {
 
                             if(tLogico.insertarCartas(cartasLogicas)) {
                                 removerLogicaOrigen();
-                                movimientoExitoso = true;
                             }
                         }
                     }
                     // Mover a WasteZone
                     else if(contenedorStackPane != null) {
+                        undoSave();
                         int indice = wasteZone.indexOf(contenedorStackPane);
                         WasteZone[] wasteZones = tableroLogico.getWasteZones();
                         WasteZone wLogico = wasteZones[indice];
@@ -552,7 +600,6 @@ public class EightOffVisualController {
                         if(cartasLogicas.size() == 1 && wLogico.getCarta() == null){
                             wLogico.setCarta(cartasLogicas.get(0));
                             removerLogicaOrigen();
-                            movimientoExitoso = true;
                         }
                     }
 
@@ -568,6 +615,9 @@ public class EightOffVisualController {
                     // Limpiar selección
                     limpiarSeleccion();
                     event.consume();
+                }
+                if(verificarVictoria()){
+                    mostrarMensajeVictoria();
                 }
             });
         }

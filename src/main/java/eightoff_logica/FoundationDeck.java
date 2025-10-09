@@ -11,6 +11,12 @@ public class FoundationDeck {
     public FoundationDeck() {
         foundation = new ListaCircularSimple<>();
     }
+    public FoundationDeck(FoundationDeck original) {
+        this.foundation = new ListaCircularSimple<>();
+        for (int i = 0; i < original.getFoundation().size(); i++) {
+            this.foundation.insertaFin(new CartaInglesa(original.getFoundation().get(i)));
+        }
+    }
 
     public boolean ingresarCarta(CartaInglesa card) {
         if(foundation.isEmpty()){

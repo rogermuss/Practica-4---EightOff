@@ -66,7 +66,11 @@ public class TableroLogico {
     public void repartirCartasWasteZones(){
         for(int i = 0; i < wasteZones.length; i++){
             CartaInglesa c = cartasMazo.eliminaFin();
-            wasteZones[i] = new WasteZone(c);
+            if( c != null) {
+                wasteZones[i] = new WasteZone(c);
+            }else{
+                wasteZones[i] = new WasteZone();
+            }
         }
     }
 
@@ -86,6 +90,22 @@ public class TableroLogico {
             }
         }
     }
+    public FoundationDeck[] clonarFoundationDecks(FoundationDeck[] originales) {
+        FoundationDeck[] copia = new FoundationDeck[originales.length];
+        for (int i = 0; i < originales.length; i++) {
+            copia[i] = new FoundationDeck(originales[i]);
+        }
+        return copia;
+    }
+
+    public TableauDeck[] clonarTableauDecks(TableauDeck[] originales) {
+        TableauDeck[] copia = new TableauDeck[originales.length];
+        for (int i = 0; i < originales.length; i++) {
+            copia[i] = new TableauDeck(originales[i]);
+        }
+        return copia;
+    }
+
 
 
     public void setFoundationDecks(FoundationDeck[] foundationDecks) {

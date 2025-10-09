@@ -12,6 +12,12 @@ public class TableauDeck {
     public TableauDeck(){
         tableau = new ListaCircularSimple<>();
     }
+    public TableauDeck(TableauDeck original) {
+        this.tableau = new ListaCircularSimple<>();
+        for (int i = 0; i < original.getTableau().size(); i++) {
+            this.tableau.insertaFin(new CartaInglesa(original.getTableau().get(i)));
+        }
+    }
 
     public boolean insertarCartas(ListaCircularSimple<CartaInglesa> cartas){
         if(tableau.isEmpty()){

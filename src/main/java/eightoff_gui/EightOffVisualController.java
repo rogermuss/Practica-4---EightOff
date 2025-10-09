@@ -229,13 +229,13 @@ public class EightOffVisualController {
                     if (labelTop.getText().equals(tLogico.get(i).toString())) {
                         if(!tLogico.get(i).isFaceup()){
                             carta.setOpacity(0.5);
-                            quitarHover(carta); // ✅ Quitar hover si está boca abajo
+                            quitarHover(carta);
                         } else{
                             carta.setOpacity(1);
                             agregarHover(carta);
                         }
                         t.getChildren().add(carta);
-                        break; // ✅ IMPORTANTE: Evitar duplicados
+                        break;
                     }
                 }
             }
@@ -251,9 +251,9 @@ public class EightOffVisualController {
                     Label labelTop = (Label) carta.lookup("#LabelTop");
                     if (labelTop.getText().equals(fLogico.get(i).toString())) {
                         carta.setOpacity(1);
-                        quitarHover(carta); // ✅ Foundation no es draggable
+                        quitarHover(carta);
                         f.getChildren().add(carta);
-                        break; // ✅ IMPORTANTE
+                        break;
                     }
                 }
             }
@@ -269,9 +269,9 @@ public class EightOffVisualController {
                     Label labelTop = (Label) carta.lookup("#LabelTop");
                     if (labelTop.getText().equals(cartaLogica.toString())) {
                         carta.setOpacity(1);
-                        agregarHover(carta); // ✅ SIEMPRE agregar hover en WasteZone
+                        agregarHover(carta);
                         wz.getChildren().add(carta);
-                        break; // ✅ IMPORTANTE
+                        break;
                     }
                 }
             }

@@ -1,5 +1,9 @@
 package eightoff_gui;
 
+import DeckOfCards.CartaInglesa;
+import eightoff_logica.FoundationDeck;
+import eightoff_logica.TableauDeck;
+import eightoff_logica.WasteZone;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -8,31 +12,30 @@ import java.util.ArrayList;
 
 public class Estado {
     // Atributos que guardan índices y estados
-    private ArrayList<ArrayList<Integer>> tableausIndices;
-    private ArrayList<ArrayList<Integer>> foundationsIndices;
-    private ArrayList<Integer> pilaPozoIndices;
-    private ArrayList<Integer> pilaDescarteIndices;
+    private ArrayList<ArrayList<Integer>> tableaus;
+    private ArrayList<ArrayList<Integer>> foundations;
+    private ArrayList<ArrayList<Integer>> wasteZones;
     private ArrayList<Boolean> cartasVisibles;
 
     // Constructor que captura el estado actual del juego
     //Se ingresa el tableau, los foundation, las pilas y las cartas graficas
     //para obtener el indice y visibilidad de todas las cartas.
-    public Estado(ArrayList<VBox> tableaus, ArrayList<VBox> foundations,
-                  Pila<StackPane> pilaPozo, Pila<StackPane> pilaDescarte,
-                  ArrayList<StackPane> cartasGraficas) {
+
+    /*
+    public Estado(TableauDeck[] tableaus, FoundationDeck[] foundations,
+                  WasteZone[] wasteZones, ArrayList<CartaInglesa> cartasGraficas) {
 
         // inicializo las listas que copiaran los elementos
-        this.tableausIndices = new ArrayList<>();
-        this.foundationsIndices = new ArrayList<>();
-        this.pilaPozoIndices = new ArrayList<>();
-        this.pilaDescarteIndices = new ArrayList<>();
+        this.tableaus = new ArrayList<>();
+        this.foundations = new ArrayList<>();
+        this.wasteZones = new ArrayList<>();
         this.cartasVisibles = new ArrayList<>();
 
         // Saco las cartas por cada tableau y guardo su respectivo indice asociado
         // al mazo general de cartas graficas, cada tableau tiene su arreglo de indices
-        for (VBox tableau : tableaus) {
+        for (TableauDeck t:tableaus) {
             ArrayList<Integer> indicesTableau = new ArrayList<>();
-            for (Node node : tableau.getChildren()) {
+            for (Node node : t.getChildren()) {
                 if (node instanceof StackPane) {
                     StackPane carta = (StackPane) node;
                     int indice = cartasGraficas.indexOf(carta);
@@ -41,7 +44,7 @@ public class Estado {
                     }
                 }
             }
-            this.tableausIndices.add(indicesTableau);
+            this.tableaus.add(indicesTableau);
         }
 
         // Saco las cartas por cada foundation y guardo su respectivo indice asociado
@@ -57,13 +60,13 @@ public class Estado {
                     }
                 }
             }
-            this.foundationsIndices.add(indicesFoundation);
+            this.foundations.add(indicesFoundation);
         }
 
         // Capturo los indices de los elementos de la pila
         // (Se necesitara ingresar de forma inversa para tener un orden correcto)
-        capturarPila(pilaPozo, this.pilaPozoIndices, cartasGraficas);
-        capturarPila(pilaDescarte, this.pilaDescarteIndices, cartasGraficas);
+        //capturarPila(pilaPozo, this.pilaPozoIndices, cartasGraficas);
+        //capturarPila(pilaDescarte, this.pilaDescarteIndices, cartasGraficas);
 
         // Capturar visibilidad de todas las cartas
         for (StackPane carta : cartasGraficas) {
@@ -73,7 +76,7 @@ public class Estado {
         }
     }
 
-    //Captura los indices de las pilas
+    /*Captura los indices de las pilas
     private void capturarPila(Pila<StackPane> pilaOriginal, ArrayList<Integer> destino,
                               ArrayList<StackPane> cartasGraficas) {
         if (pilaOriginal.isEmpty()) {
@@ -103,26 +106,20 @@ public class Estado {
         destino.addAll(indicesTemp);
     }
 
+     */
 
 
     // Getters y Setters
-    public ArrayList<ArrayList<Integer>> getTableausIndices() {
-        return tableausIndices;
+    public ArrayList<ArrayList<Integer>> getTableaus() {
+        return tableaus;
     }
 
 
-    public ArrayList<ArrayList<Integer>> getFoundationsIndices() {
-        return foundationsIndices;
+    public ArrayList<ArrayList<Integer>> getFoundations() {
+        return foundations;
     }
 
 
-    public ArrayList<Integer> getPilaPozoIndices() {
-        return pilaPozoIndices;
-    }
-
-    public ArrayList<Integer> getPilaDescarteIndices() {
-        return pilaDescarteIndices;
-    }
 
     public ArrayList<Boolean> getCartasVisibles() {
         return cartasVisibles;

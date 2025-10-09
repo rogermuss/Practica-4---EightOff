@@ -23,6 +23,10 @@ public class ListaCircularDoble<T> {
         } while (n != l.inicio);
     }
 
+    public boolean isEmpty(){
+        return inicio == null;
+    }
+
 
     public void insertaInicio(T data) {
         NodoDoble<T> n = new NodoDoble<>(data);

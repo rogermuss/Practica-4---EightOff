@@ -12,6 +12,23 @@ public abstract class Carta implements Comparable<Carta> {
     private String color;
     private int valorBajo;
     private boolean faceup;
+    public enum ValorEnum {
+        AS,
+        DOS,
+        TRES,
+        CUATRO,
+        CINCO,
+        SEIS,
+        SIETE,
+        OCHO,
+        NUEVE,
+        DIEZ,
+        J,
+        Q,
+        K
+    }
+
+    ValorEnum valorEnum;
 
     /**
      * Crea una carta que no se ve su contenido.
@@ -22,6 +39,7 @@ public abstract class Carta implements Comparable<Carta> {
     public Carta(int valor, Palo palo, String color) {
 
         this.valor = valor;
+        setValorEnum(valor);
         this.palo = palo;
         this.color = color;
         if (valor == 14) {
@@ -32,6 +50,8 @@ public abstract class Carta implements Comparable<Carta> {
 
         faceup = false;
     }
+
+
 
     /**
      * Voltea una carta para que NO se vea su contenido.
@@ -53,9 +73,6 @@ public abstract class Carta implements Comparable<Carta> {
         return faceup;
     }
     public String toString() {
-        if (!faceup) {
-            return "@";
-        }
         return switch (valor) {
             case 1 -> "A" + palo.getFigura();
             case 11 -> "J"+ palo.getFigura();
@@ -81,6 +98,29 @@ public abstract class Carta implements Comparable<Carta> {
             return true;
         }
         return false;
+    }
+
+
+    public void setValorEnum(int valor) {
+        switch (valor) {
+            case 1 -> valorEnum = ValorEnum.AS;
+            case 2 -> valorEnum = ValorEnum.DOS;
+            case 3 -> valorEnum = ValorEnum.TRES;
+            case 4 -> valorEnum = ValorEnum.CUATRO;
+            case 5 -> valorEnum = ValorEnum.CINCO;
+            case 6 -> valorEnum = ValorEnum.SEIS;
+            case 7 -> valorEnum = ValorEnum.SIETE;
+            case 8 -> valorEnum = ValorEnum.OCHO;
+            case 9 -> valorEnum = ValorEnum.NUEVE;
+            case 10 -> valorEnum = ValorEnum.DIEZ;
+            case 11 -> valorEnum = ValorEnum.J;
+            case 12 -> valorEnum = ValorEnum.Q;
+            case 13 -> valorEnum = ValorEnum.K;
+        }
+    }
+
+    public ValorEnum getValorEnum() {
+        return valorEnum;
     }
 
     public int getValor() {

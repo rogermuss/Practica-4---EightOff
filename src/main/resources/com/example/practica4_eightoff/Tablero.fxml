@@ -171,7 +171,7 @@
             <Font name="Verdana" size="23.0" />
          </font>
       </Text>
-      <StackPane fx:id="zonaDescarte1" layoutX="14.0" layoutY="42.0" onMouseClicked="#manejarClicPozo" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <StackPane fx:id="zonaDescarte1" layoutX="14.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
       <StackPane fx:id="zonaDescarte2" layoutX="95.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
       <StackPane fx:id="zonaDescarte3" layoutX="180.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
       <StackPane fx:id="zonaDescarte4" layoutX="258.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />

@@ -37,22 +37,27 @@ public class Mazo {
     }
     private void mezclar() {
         Random rand = new Random();
-        CartaInglesa[] aux = new CartaInglesa[cartas.size()];
-        for(int i = 0; i < cartas.size(); i++) {
+        int total = cartas.size(); // Guardamos el tamaño antes de eliminar
+        CartaInglesa[] aux = new CartaInglesa[total];
+
+        // Extrae todas las cartas del mazo y las guarda en el arreglo
+        for (int i = 0; i < total; i++) {
             CartaInglesa c = cartas.eliminaInicio();
             aux[i] = c;
         }
-        for(int i = 0; i < aux.length; i++) {
+
+        // Inserta las cartas de nuevo en orden aleatorio
+        for (int i = 0; i < aux.length; i++) {
             int numRandom = rand.nextInt(aux.length);
-            if(aux[numRandom] != null) {
+            if (aux[numRandom] != null) {
                 cartas.insertaInicio(aux[numRandom]);
                 aux[numRandom] = null;
-            } else  {
-                i--;
+            } else {
+                i--; // Repite si ya se uso esa posicion
             }
         }
-
     }
+
 
     private void llenar() {
         for (int i = 1; i <=13 ; i++) {

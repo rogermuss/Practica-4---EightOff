@@ -9,6 +9,38 @@ public class ListaCircularSimple<T> {
         fin = null;
     }
 
+    public int size(){
+        if(inicio == null){
+            return 0;
+        }
+        else{
+            int size = 0;
+            Nodo<T> r = inicio;
+            do {
+                r = r.getSiguiente();
+                size++;
+            } while (r != inicio);
+            return size;
+        }
+    }
+
+    public boolean isEmpty(){
+        return inicio == null;
+    }
+
+    public T get(int index){
+        if(isEmpty()){
+            return null;
+        }
+        else{
+            Nodo<T> r = inicio;
+            for(int i = 0; i < index; i++){
+                r = r.getSiguiente();
+            }
+            return r.getInfo();
+        }
+    }
+
     public void insertaInicio(T dato) {
         Nodo<T> n = new Nodo<>(dato, null);
         if (inicio == null) {
@@ -41,7 +73,7 @@ public class ListaCircularSimple<T> {
             return null;
         }
 
-        T t = inicio.getInfo();
+        T data = inicio.getInfo();
 
         if (inicio == fin) { // solo un nodo
             inicio = null;
@@ -51,7 +83,7 @@ public class ListaCircularSimple<T> {
             fin.setSiguiente(inicio);
         }
 
-        return t;
+        return data;
     }
 
     public T eliminaFin() {
@@ -60,7 +92,7 @@ public class ListaCircularSimple<T> {
             return null;
         }
 
-        T t = fin.getInfo();
+        T data = fin.getInfo();
 
         if (inicio == fin) { // un solo nodo
             inicio = null;
@@ -74,7 +106,7 @@ public class ListaCircularSimple<T> {
             fin.setSiguiente(inicio);
         }
 
-        return t;
+        return data;
     }
 
     public void mostrar() {

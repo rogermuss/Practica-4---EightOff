@@ -17,7 +17,7 @@
 
 <AnchorPane fx:id="Tablero" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eightoff_gui.EightOffVisualController">
    <children>
-      <Rectangle height="688.0" smooth="false" width="831.0">
+      <Rectangle fx:id="fondo" height="688.0" smooth="false" width="831.0">
          <fill>
             <LinearGradient endX="0.5" endY="1.0" startX="0.5">
                <stops>
@@ -179,6 +179,32 @@
       <StackPane fx:id="zonaDescarte6" layoutX="410.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
       <StackPane fx:id="zonaDescarte7" layoutX="488.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
       <StackPane fx:id="zonaDescarte8" layoutX="566.0" layoutY="42.0" prefHeight="94.0" prefWidth="64.0" style="-fx-background-color: rgb(255, 197, 211);" />
+      <Button fx:id="clueButton" layoutX="650.0" layoutY="42.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="70.0" style="-fx-background-color: rgb(119, 221, 119);" text="Pista ?" textAlignment="CENTER">
+         <font>
+            <Font name="Verdana" size="13.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.5" endY="1.0" startX="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.02994151972234249" green="0.3368421196937561" blue="0.050401560962200165" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.6">
+                     <color>
+                        <Color red="0.05224171653389931" green="0.05263157933950424" blue="0.05230669304728508" opacity="0.20000000298023224" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.20477193593978882" green="0.378947377204895" blue="0.17403508722782135" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Button>
 
    </children>
 </AnchorPane>

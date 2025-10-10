@@ -24,16 +24,16 @@ import lista_circular_simple.ListaCircularSimple;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class EightOffVisualController {
     // Reemplazar estas variables de instancia
     private Manager manager;
-    private Estado respaldo = null;
     private StackPane cartaSeleccionada = null;
     private ListaCircularSimple<CartaInglesa> cartasLogicas = new ListaCircularSimple<>();
     private ArrayList<StackPane> cartasSeleccionadas = new ArrayList<>(); // Para múltiples cartas
     private javafx.scene.Parent contenedorOrigen = null; // Cambiar de VBox a Parent
-    private double offsetX, offsetY;
     private ArrayList<StackPane> cartasGraficas = new ArrayList<>();
     private ListaCircularSimple<Estado> listaEstados = new ListaCircularSimple<>();
 
@@ -60,6 +60,7 @@ public class EightOffVisualController {
 
     @FXML Button newGame;
     @FXML Button menu;
+    @FXML Button clueButton;
 
     // Descarte
     @FXML StackPane zonaDescarte1;
@@ -96,6 +97,13 @@ public class EightOffVisualController {
 
         //Agrega hover
         hoverUndo();
+
+        //Click ClueButton
+        clueClick();
+
+        //Hover ClueButton
+        hoverBoton(clueButton);
+
 
         menu.setOnAction(e -> {
             regrearAlMenu();
@@ -137,14 +145,10 @@ public class EightOffVisualController {
             vbox.setSpacing(-95);
         }
 
-        for(StackPane  zonaDescarte: new StackPane[]{zonaDescarte1, zonaDescarte2,
-                            zonaDescarte3, zonaDescarte4, zonaDescarte5, zonaDescarte6,
-                            zonaDescarte7, zonaDescarte8}) {
-
-        }
 
 
     }
+
 
     //Genero los arreglos para los tableaus y los foundations
     public void crearArreglos() {
@@ -315,7 +319,7 @@ public class EightOffVisualController {
                 Alert.AlertType.CONFIRMATION);
         alert.setTitle("Felicitaciones!");
         alert.setHeaderText("Has ganado!");
-        alert.setContentText("Completaste Solitario!\n¿Quieres jugar otra vez?");
+        alert.setContentText("Completaste EightOff!\n¿Quieres jugar otra vez?");
         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
         alert.showAndWait().ifPresent(response -> {
@@ -449,6 +453,88 @@ public class EightOffVisualController {
 
 
 
+    public void clueClick(){
+        clueButton.setOnMouseClicked(e -> {
+            if(tableroLogico.canMove()) {
+                if (!tableroLogico.getMovimientosDisponibles().isEmpty()) {
+                    CartaInglesa[] movimientoSeleccionado = tableroLogico.tomarMovimientoDisponible();
+
+                    if (movimientoSeleccionado != null) {
+                        for (StackPane carta : cartasGraficas) {
+                            Label labelTop = (Label) carta.lookup("#LabelTop");
+
+                            // Resaltar carta origen
+                            if (labelTop.getText().equals(movimientoSeleccionado[0].toString())) {
+                                resaltarCarta(carta);
+                            }
+
+                            // Resaltar carta destino (si existe)
+                            if (movimientoSeleccionado[1] != null &&
+                                    labelTop.getText().equals(movimientoSeleccionado[1].toString())) {
+                                resaltarCarta(carta);
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Opcional: mostrar mensaje de que no hay movimientos
+                System.out.println("No hay movimientos disponibles");
+            }
+        });
+    }
+
+    public void resaltarCarta(StackPane carta){
+        // Guardar el estilo original
+        String estiloOriginal = carta.getStyle();
+
+        // Aplicar resaltado
+        carta.setStyle(carta.getStyle() +
+                "-fx-effect: dropshadow(gaussian, gold, 20, 0.9, 0, 0);");
+
+        // Restaurar después de 3 segundos
+        new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+                javafx.application.Platform.runLater(() -> {
+                    carta.setStyle(estiloOriginal);
+                });
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+
+    public boolean hayMovimientos(){
+        try {
+            return tableroLogico.canMove();
+        } catch (Exception e) {
+            System.err.println("Error al verificar movimientos: " + e.getMessage());
+            e.printStackTrace();
+            return true; // Asumir que hay movimientos si hay error
+        }
+    }
+
+    public void mostrarMensajeDeDerrota(){
+        Alert alert = new Alert(
+                Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Lo sientoo!");
+        alert.setHeaderText("Has perdido!");
+        alert.setContentText("¿Quieres jugar otra vez?");
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                reiniciarJuego();
+            }
+            if (response == ButtonType.NO) {
+                regrearAlMenu();
+            }
+        });
+    }
+
+
+
+
     private void limpiarGUI() {
         for(VBox t : tableaus) {
             t.getChildren().clear();
@@ -467,7 +553,6 @@ public class EightOffVisualController {
         cartasSeleccionadas.clear();
         contenedorOrigen = null;
     }
-
 
 
 
@@ -618,6 +703,9 @@ public class EightOffVisualController {
                 }
                 if(verificarVictoria()){
                     mostrarMensajeVictoria();
+                }
+                if(!hayMovimientos()){
+                    mostrarMensajeDeDerrota();
                 }
             });
         }

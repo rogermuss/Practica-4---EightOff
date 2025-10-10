@@ -144,4 +144,28 @@ public abstract class Carta implements Comparable<Carta> {
     public int getValorBajo() {
         return valorBajo;
     }
+
+    public void setValorEnum(ValorEnum valorEnum) {
+        this.valorEnum = valorEnum;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setFaceup(boolean faceup) {
+        this.faceup = faceup;
+    }
+
+    public void setValor(int valor) {
+        this.valor = valor;
+    }
+
+    public void setPalo(Palo palo) {
+        this.palo = palo;
+    }
+
+    public void setValorBajo(int valorBajo) {
+        this.valorBajo = valorBajo;
+    }
 }

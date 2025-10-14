@@ -16,6 +16,7 @@ public class Estado {
     private FoundationDeck[]  foundationDecks =  new FoundationDeck[4];
     private TableauDeck[] tableauDecks =  new TableauDeck[8];
     private WasteZone[]  wasteZones = new WasteZone[8];
+    private ListaCircularSimple<Boolean> visibilidadCartas;
 
 
     // Constructor que captura el estado actual del juego
@@ -24,7 +25,7 @@ public class Estado {
 
 
     public Estado(TableauDeck[] tableaus, FoundationDeck[] foundations,
-                  WasteZone[] wasteZones) {
+                  WasteZone[] wasteZones, ListaCircularSimple<Boolean> visibilidadCartas) {
 
         ArrayList<ListaCircularSimple<CartaInglesa>> t = new ArrayList<>();
         ArrayList<ListaCircularSimple<CartaInglesa>> f  = new ArrayList<>();
@@ -60,8 +61,22 @@ public class Estado {
             }
         }
 
+        this.visibilidadCartas = copiarVisibilidad(visibilidadCartas);
 
     }
+
+    public ListaCircularSimple<Boolean> copiarVisibilidad(ListaCircularSimple<Boolean> visibilidadOriginal) {
+        ListaCircularSimple<Boolean> copia = new ListaCircularSimple<>();
+
+        for (int i = 0; i < visibilidadOriginal.size(); i++) {
+            // Crear una nueva referencia booleana (aunque Boolean es inmutable, así evitas compartir lista)
+            Boolean valor = visibilidadOriginal.get(i);
+            copia.insertaFin(valor);
+        }
+
+        return copia;
+    }
+
 
     public WasteZone[] getWasteZones() {
         return wasteZones;
@@ -73,5 +88,9 @@ public class Estado {
 
     public FoundationDeck[] getFoundationDecks() {
         return foundationDecks;
+    }
+
+    public ListaCircularSimple<Boolean> getVisibilidadCartas() {
+        return visibilidadCartas;
     }
 }

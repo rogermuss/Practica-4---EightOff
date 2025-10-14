@@ -33,6 +33,33 @@ public class TableroLogico {
         crearMazoGrafico();
     }
 
+    public ListaCircularSimple<Boolean> guardarVisibilidadCartas() {
+        ListaCircularSimple<Boolean> visibilidadCartas = new ListaCircularSimple<>();
+
+        for (int i = 0; i < cartasGraficas.size(); i++) {
+            CartaInglesa carta = cartasGraficas.get(i);
+            visibilidadCartas.insertaFin(carta.isFaceup());
+        }
+
+        return visibilidadCartas;
+    }
+
+    public void restaurarVisibilidadCartas(ListaCircularSimple<Boolean> visibilidadCartas) {
+        int total = Math.min(cartasGraficas.size(), visibilidadCartas.size());
+
+        for (int i = 0; i < total; i++) {
+            CartaInglesa carta = cartasGraficas.get(i);
+            boolean visible = visibilidadCartas.get(i);
+
+            if (visible) {
+                carta.makeFaceUp();
+            } else {
+                carta.makeFaceDown();
+            }
+        }
+    }
+
+
     public void makeAllVisible(){
         for(int i=0; i<cartasMazo.size(); i++ ){
             cartasMazo.get(i).makeFaceUp();

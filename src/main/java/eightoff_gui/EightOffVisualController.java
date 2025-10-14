@@ -433,7 +433,7 @@ public class EightOffVisualController {
                 tableroLogico.setFoundationDecks(tableroLogico.clonarFoundationDecks(estado.getFoundationDecks()));
                 tableroLogico.setTableauDecks(tableroLogico.clonarTableauDecks(estado.getTableauDecks()));
                 tableroLogico.setWasteZones(estado.getWasteZones());
-
+                tableroLogico.restaurarVisibilidadCartas(estado.getVisibilidadCartas());
                 limpiarGUI();
                 try {
                     actualizarCartas();
@@ -447,7 +447,7 @@ public class EightOffVisualController {
     //Guardado del estado
     public void undoSave(){
         Estado estado = new  Estado(tableroLogico.getTableauDecks(),
-                tableroLogico.getFoundationDecks(), tableroLogico.getWasteZones());
+                tableroLogico.getFoundationDecks(), tableroLogico.getWasteZones(), tableroLogico.guardarVisibilidadCartas());
         listaEstados.insertaFin(estado);
     }
 

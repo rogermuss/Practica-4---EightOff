@@ -123,7 +123,18 @@ public class TableroLogico {
     public FoundationDeck[] clonarFoundationDecks(FoundationDeck[] originales) {
         FoundationDeck[] copia = new FoundationDeck[originales.length];
         for (int i = 0; i < originales.length; i++) {
-            copia[i] = new FoundationDeck(originales[i]);
+            copia[i] = new FoundationDeck();
+            ListaCircularSimple<CartaInglesa> listaOriginal = originales[i].getFoundation();
+            for(int j = 0; j < listaOriginal.size(); j++) {
+                // Buscar la carta en cartasGraficas en lugar de crear una nueva
+                CartaInglesa cartaOriginal = listaOriginal.get(j);
+                for(CartaInglesa cartaGrafica : cartasGraficas) {
+                    if(cartaGrafica.toString().equals(cartaOriginal.toString())) {
+                        copia[i].getFoundation().insertaFin(cartaGrafica);
+                        break;
+                    }
+                }
+            }
         }
         return copia;
     }
@@ -131,7 +142,36 @@ public class TableroLogico {
     public TableauDeck[] clonarTableauDecks(TableauDeck[] originales) {
         TableauDeck[] copia = new TableauDeck[originales.length];
         for (int i = 0; i < originales.length; i++) {
-            copia[i] = new TableauDeck(originales[i]);
+            copia[i] = new TableauDeck();
+            ListaCircularSimple<CartaInglesa> listaOriginal = originales[i].getTableau();
+            for(int j = 0; j < listaOriginal.size(); j++) {
+                // Buscar la carta en cartasGraficas en lugar de crear una nueva
+                CartaInglesa cartaOriginal = listaOriginal.get(j);
+                for(CartaInglesa cartaGrafica : cartasGraficas) {
+                    if(cartaGrafica.toString().equals(cartaOriginal.toString())) {
+                        copia[i].getTableau().insertaFin(cartaGrafica);
+                        break;
+                    }
+                }
+            }
+        }
+        return copia;
+    }
+
+    public WasteZone[] clonarWasteZones(WasteZone[] originales) {
+        WasteZone[] copia = new WasteZone[originales.length];
+        for (int i = 0; i < originales.length; i++) {
+            copia[i] = new WasteZone();
+            if (originales[i].getCarta() != null) {
+                CartaInglesa cartaOriginal = originales[i].getCarta();
+                // Buscar la carta en cartasGraficas
+                for(CartaInglesa cartaGrafica : cartasGraficas) {
+                    if(cartaGrafica.toString().equals(cartaOriginal.toString())) {
+                        copia[i].setCarta(cartaGrafica);
+                        break;
+                    }
+                }
+            }
         }
         return copia;
     }

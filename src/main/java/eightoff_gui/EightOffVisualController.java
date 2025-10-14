@@ -432,7 +432,7 @@ public class EightOffVisualController {
                 Estado estado = listaEstados.eliminaFin();
                 tableroLogico.setFoundationDecks(tableroLogico.clonarFoundationDecks(estado.getFoundationDecks()));
                 tableroLogico.setTableauDecks(tableroLogico.clonarTableauDecks(estado.getTableauDecks()));
-                tableroLogico.setWasteZones(estado.getWasteZones());
+                tableroLogico.setWasteZones(tableroLogico.clonarWasteZones(estado.getWasteZones()));
                 tableroLogico.restaurarVisibilidadCartas(estado.getVisibilidadCartas());
                 limpiarGUI();
                 try {

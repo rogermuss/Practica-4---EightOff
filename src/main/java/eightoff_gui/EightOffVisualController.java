@@ -82,6 +82,13 @@ public class EightOffVisualController {
     private final double CARD_HEIGHT = 94.0; // Mismo que en FXML
     private final double CARD_OFFSET = 1.0; // Desplazamiento para el efecto escalera
 
+    /**
+     * Inicializa el controlador configurando todos los componentes visuales y sus event handlers.
+     * Configura los botones con sus efectos hover, genera las cartas gráficas, las distribuye
+     * en el tablero y habilita las funcionalidades de arrastrar y soltar.
+     *
+     * @throws IOException si hay error al cargar los recursos FXML
+     */
     @FXML
     private void initialize() throws IOException {
 
@@ -133,7 +140,11 @@ public class EightOffVisualController {
 
     }
 
-    //Configuro que tanto se espacian las cartas en vertical.
+    /**
+     * Configura el espaciado vertical de los VBox contenedores de cartas.
+     * Usa espaciado negativo para crear el efecto de cartas superpuestas en los tableaus
+     * y foundations, permitiendo ver parte de cada carta en la pila.
+     */
     public void configurarVBoxes() {
         for (VBox vbox : new VBox[]{t1, t2, t3, t4, t5, t6, t7, t8}) {
             vbox.setFillWidth(false);
@@ -150,7 +161,11 @@ public class EightOffVisualController {
     }
 
 
-    //Genero los arreglos para los tableaus y los foundations
+    /**
+     * Crea los ArrayLists que almacenan referencias a los contenedores del juego.
+     * Organiza los tableaus (8 columnas), foundations (4 pilas) y waste zones (8 espacios)
+     * en listas para facilitar su acceso mediante índices.
+     */
     public void crearArreglos() {
         tableaus.add(t1);
         tableaus.add(t2);
@@ -176,7 +191,13 @@ public class EightOffVisualController {
         wasteZone.add(zonaDescarte8);
     }
 
-    //Genero las cartas a partir del mazo de original y les imparto un diseño ya creado.
+    /**
+     * Genera todas las cartas gráficas del juego cargando el diseño FXML de cada carta.
+     * Configura el tamaño fijo, los labels con los valores y palos, y los estilos visuales
+     * de cada carta. Las cartas generadas se almacenan en el ArrayList cartasGraficas.
+     *
+     * @throws IOException si hay error al cargar el archivo FXML de las cartas
+     */
     public void generarCartas() throws IOException {
 
         //A partir de la clase mazo genero todas las cartas de la baraja
@@ -199,19 +220,19 @@ public class EightOffVisualController {
             Label labelBottom = (Label) cartaStackPane.lookup("#LabelBottom");
 
             // Configuro la carta según sus datos
-                labelTop.setText(carta.toString());
-                labelTop.setStyle("-fx-text-fill: " + carta.getColor() + "; -fx-font-weight: bold;");
+            labelTop.setText(carta.toString());
+            labelTop.setStyle("-fx-text-fill: " + carta.getColor() + "; -fx-font-weight: bold;");
 
 
-                labelCenter.setText(carta.toString());
-                labelCenter.setStyle("-fx-text-fill: " + carta.getColor() + "; -fx-font-weight: bold;");
+            labelCenter.setText(carta.toString());
+            labelCenter.setStyle("-fx-text-fill: " + carta.getColor() + "; -fx-font-weight: bold;");
 
 
-                labelBottom.setText(carta.getPalo().getFigura());
-                labelBottom.setStyle("-fx-text-fill: " + carta.getColor() + "; -fx-font-size: 40; -fx-font-weight: bold;");
+            labelBottom.setText(carta.getPalo().getFigura());
+            labelBottom.setStyle("-fx-text-fill: " + carta.getColor() + "; -fx-font-size: 40; -fx-font-weight: bold;");
 
 
-                visibleCard.setVisible(true);
+            visibleCard.setVisible(true);
 
             // También restaurar estilo normal
             cartaStackPane.setStyle("-fx-background-color: white;" +
@@ -225,6 +246,14 @@ public class EightOffVisualController {
         }
     }
 
+    /**
+     * Actualiza la interfaz gráfica sincronizándola con el estado lógico del tablero.
+     * Coloca cada carta gráfica en su contenedor correspondiente (tableau, foundation o waste zone)
+     * según la distribución actual del tablero lógico. Ajusta la opacidad y efectos hover
+     * según si las cartas están boca arriba o boca abajo.
+     *
+     * @throws IOException si hay error durante la actualización
+     */
     public void actualizarCartas() throws IOException {
 
         int indexTableau = 0;
@@ -292,6 +321,13 @@ public class EightOffVisualController {
 
 
 
+    /**
+     * Verifica si una carta puede ser arrastrada por el usuario.
+     * Una carta es arrastrable si está boca arriba (opacidad 1.0) y no está en un foundation.
+     *
+     * @param cartaSeleccionada la carta a verificar
+     * @return true si la carta puede ser arrastrada, false en caso contrario
+     */
     public boolean isDraggable(StackPane cartaSeleccionada){
         if(cartaSeleccionada.getOpacity() == 1.0){
             for(VBox f:foundations){
@@ -304,6 +340,13 @@ public class EightOffVisualController {
         return false;
     }
 
+    /**
+     * Verifica si el jugador ha ganado la partida.
+     * La victoria ocurre cuando los 4 foundations contienen 13 cartas cada uno
+     * (un palo completo del As al Rey en cada uno).
+     *
+     * @return true si se cumple la condición de victoria, false en caso contrario
+     */
     public boolean verificarVictoria(){
         int contVictoria = 0;
         for(VBox f:foundations){
@@ -314,6 +357,11 @@ public class EightOffVisualController {
         return contVictoria == 4;
     }
 
+    /**
+     * Muestra un cuadro de diálogo de victoria cuando el jugador completa el juego.
+     * Ofrece opciones para jugar nuevamente o regresar al menú principal.
+     * Las respuestas del usuario ejecutan reiniciarJuego() o regrearAlMenu() respectivamente.
+     */
     private void mostrarMensajeVictoria() {
         Alert alert = new Alert(
                 Alert.AlertType.CONFIRMATION);
@@ -332,6 +380,11 @@ public class EightOffVisualController {
         });
     }
 
+    /**
+     * Regresa al menú principal del juego utilizando el Manager.
+     * Obtiene la ventana actual desde el Stage de uno de los tableaus y
+     * llama al método iniciarEscenaMenu() del manager.
+     */
     public void regrearAlMenu(){
         manager = new Manager((Stage) t1.getScene().getWindow());
         try {
@@ -341,6 +394,11 @@ public class EightOffVisualController {
         }
     }
 
+    /**
+     * Reinicia el juego actual iniciando una nueva partida.
+     * Utiliza el Manager para cargar una nueva escena de juego con un tablero
+     * recién mezclado y distribuido.
+     */
     public void reiniciarJuego(){
         manager = new Manager((Stage) t1.getScene().getWindow());
         try {
@@ -351,7 +409,13 @@ public class EightOffVisualController {
     }
 
 
-    //Agrega hover
+    /**
+     * Agrega efectos visuales de hover a una carta.
+     * Cuando el mouse entra sobre la carta, cambia el color de fondo, el borde
+     * y añade una sombra difuminada. Al salir, restaura el estilo original.
+     *
+     * @param carta el StackPane de la carta a la que se le agregará el hover
+     */
     private void agregarHover(StackPane carta) {
         carta.setOnMouseEntered(event -> {
             carta.setStyle("-fx-background-color: #f0f0f0;" +
@@ -372,7 +436,13 @@ public class EightOffVisualController {
         });
     }
 
-    //Elimina el hover
+    /**
+     * Elimina los efectos de hover de una carta y restaura su estilo visual normal.
+     * Remueve los event handlers de mouse y establece el estilo por defecto
+     * con fondo blanco y borde morado pastel.
+     *
+     * @param carta el StackPane de la carta a la que se le quitará el hover
+     */
     private void quitarHover(StackPane carta) {
         carta.setOnMouseEntered(null);
         carta.setOnMouseExited(null);
@@ -386,7 +456,13 @@ public class EightOffVisualController {
                 "-fx-effect: null;");
     }
 
-    //Da hover a los botones de accion
+    /**
+     * Configura efectos visuales de hover para los botones de acción del juego.
+     * Al pasar el mouse sobre el botón, cambia a un color rojizo pastel con sombra.
+     * Al salir, restaura el estilo original del botón.
+     *
+     * @param boton el botón al que se le agregará el efecto hover
+     */
     public void hoverBoton(Button boton) {
         String estiloBoton = boton.getStyle();
         boton.setOnMouseEntered(event -> {
@@ -403,7 +479,11 @@ public class EightOffVisualController {
     }
 
 
-    //Hover undo
+    /**
+     * Configura los efectos visuales de hover para el botón de deshacer (undo).
+     * Cambia a un color amarillo pastel con sombra cuando el mouse está sobre él,
+     * y restaura el color oscuro original cuando el mouse sale.
+     */
     public void hoverUndo() {
         //Hover UNDO
         undoButton.setOnMouseEntered(e -> {
@@ -424,7 +504,12 @@ public class EightOffVisualController {
         });
     }
 
-    //Evento undo al hacer click
+    /**
+     * Configura la funcionalidad del botón de deshacer (undo).
+     * Al hacer click, restaura el estado anterior del juego desde la lista de estados,
+     * actualizando el tablero lógico y refrescando la interfaz gráfica.
+     * Solo funciona si existe al menos un estado guardado.
+     */
     public void undoClick(){
         //Regresa un movimiento
         undoButton.setOnMouseClicked(e -> {
@@ -444,7 +529,11 @@ public class EightOffVisualController {
         });
     }
 
-    //Guardado del estado
+    /**
+     * Guarda el estado actual del juego en la lista de estados para poder deshacerlo después.
+     * Crea un nuevo objeto Estado con copias del estado actual de los tableaus, foundations,
+     * waste zones y la visibilidad de las cartas, y lo agrega al final de la lista.
+     */
     public void undoSave(){
         Estado estado = new  Estado(tableroLogico.getTableauDecks(),
                 tableroLogico.getFoundationDecks(), tableroLogico.getWasteZones(), tableroLogico.guardarVisibilidadCartas());
@@ -453,6 +542,12 @@ public class EightOffVisualController {
 
 
 
+    /**
+     * Configura la funcionalidad del botón de pista (clue).
+     * Al hacer click, busca un movimiento válido disponible y resalta visualmente
+     * tanto la carta de origen como la carta de destino del movimiento sugerido.
+     * Si no hay movimientos disponibles, imprime un mensaje en consola.
+     */
     public void clueClick(){
         clueButton.setOnMouseClicked(e -> {
             if(tableroLogico.canMove()) {
@@ -483,6 +578,13 @@ public class EightOffVisualController {
         });
     }
 
+    /**
+     * Resalta visualmente una carta con un efecto de sombra dorada durante 3 segundos.
+     * Utiliza un hilo separado para esperar el tiempo y luego restaura el estilo original.
+     * Este método es usado por la funcionalidad de pistas para indicar movimientos sugeridos.
+     *
+     * @param carta la carta que se va a resaltar
+     */
     public void resaltarCarta(StackPane carta){
         // Guardar el estilo original
         String estiloOriginal = carta.getStyle();
@@ -504,6 +606,13 @@ public class EightOffVisualController {
         }).start();
     }
 
+    /**
+     * Verifica si existen movimientos válidos disponibles en el estado actual del juego.
+     * Consulta al tablero lógico para determinar si el jugador puede realizar alguna acción.
+     * En caso de error, imprime el mensaje y asume que hay movimientos disponibles.
+     *
+     * @return true si hay movimientos disponibles, false si no hay
+     */
     public boolean hayMovimientos(){
         try {
             return tableroLogico.canMove();
@@ -514,6 +623,11 @@ public class EightOffVisualController {
         }
     }
 
+    /**
+     * Muestra un cuadro de diálogo de derrota cuando no quedan movimientos válidos.
+     * Ofrece al jugador las opciones de iniciar una nueva partida o regresar al menú principal.
+     * Las respuestas ejecutan reiniciarJuego() o regrearAlMenu() según la elección.
+     */
     public void mostrarMensajeDeDerrota(){
         Alert alert = new Alert(
                 Alert.AlertType.CONFIRMATION);
@@ -535,6 +649,11 @@ public class EightOffVisualController {
 
 
 
+    /**
+     * Limpia todos los contenedores visuales del juego.
+     * Remueve todas las cartas de los tableaus, foundations y waste zones,
+     * dejando la interfaz vacía para ser actualizada con un nuevo estado.
+     */
     private void limpiarGUI() {
         for(VBox t : tableaus) {
             t.getChildren().clear();
@@ -547,6 +666,11 @@ public class EightOffVisualController {
         }
     }
 
+    /**
+     * Limpia las variables relacionadas con la selección actual de cartas.
+     * Resetea la lista de cartas lógicas, la carta seleccionada visualmente,
+     * el ArrayList de cartas seleccionadas y el contenedor de origen a null o vacío.
+     */
     private void limpiarSeleccion() {
         cartasLogicas = null;
         cartaSeleccionada = null;
@@ -558,6 +682,14 @@ public class EightOffVisualController {
 
 
 
+    /**
+     * Busca y retorna la carta lógica correspondiente a una carta visual seleccionada.
+     * Recorre todos los foundations, tableaus y waste zones comparando el texto del label
+     * con el toString() de las cartas lógicas hasta encontrar la coincidencia.
+     *
+     * @param carta el StackPane de la carta visual seleccionada
+     * @return la CartaInglesa lógica correspondiente, o null si no se encuentra
+     */
     public CartaInglesa encontrarCartaSeleccionada(StackPane carta){
         FoundationDeck[] foundationDecks = tableroLogico.getFoundationDecks();
         TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
@@ -592,7 +724,14 @@ public class EightOffVisualController {
     }
 
 
+    /**
+     * Determina si el puntero del raton al soltar una carta
+     * se encuentra sobre alguna fundacion o tableau.
+     * Si es asi, devuelve el contenedor correspondiente para procesar el movimiento.
+     * Retorna null si no se solto sobre ninguna zona valida.
+     */
     public VBox reachTableauOrFoundation(MouseEvent e){
+        // Recorre las fundaciones y verifica si el cursor esta dentro de sus limites
         for(VBox f:foundations){
             if(f.getLayoutX() <= e.getSceneX() && f.getLayoutX()+f.getWidth() >= e.getSceneX()
                     && f.getLayoutY() <= e.getSceneY() && f.getLayoutY()+f.getHeight() >= e.getSceneY()){
@@ -600,6 +739,7 @@ public class EightOffVisualController {
             }
         }
 
+        // Recorre los tableaus (columnas principales)
         for(VBox t:tableaus){
             if(t.getLayoutX() <= e.getSceneX() && t.getLayoutX()+t.getWidth() >= e.getSceneX()
                     && t.getLayoutY() <= e.getSceneY() && t.getLayoutY()+t.getHeight() >= e.getSceneY()){
@@ -610,6 +750,10 @@ public class EightOffVisualController {
         return null;
     }
 
+    /**
+     * Detecta si el cursor al soltar una carta esta sobre alguna zona de descarte (waste zone).
+     * Devuelve el contenedor StackPane correspondiente o null si no hay coincidencia.
+     */
     public StackPane reachWasteZone(MouseEvent e){
         for (StackPane w:wasteZone){
             if(w.getLayoutX() <= e.getSceneX() && w.getLayoutX()+w.getWidth() >= e.getSceneX()
@@ -621,14 +765,21 @@ public class EightOffVisualController {
         return null;
     }
 
+    /**
+     * Asigna el comportamiento de arrastre (drag) a todas las cartas graficas.
+     * Detecta cuando una carta es presionada y verifica si puede moverse.
+     * Si es asi, guarda su referencia y aplica un efecto visual de seleccion.
+     */
     public void setDraggable(){
         for(StackPane carta:cartasGraficas){
             carta.setOnMousePressed(event -> {
                 if(isDraggable(carta)){
                     cartaSeleccionada = carta;
 
+                    // Identifica la carta logica correspondiente y posibles secuencias
                     identificarOrigenYCartas(carta);
 
+                    // Aplica un efecto de sombra morada a las cartas seleccionadas
                     for(StackPane c:cartasSeleccionadas){
                         c.setStyle(c.getStyle() +
                                 "-fx-effect: dropshadow(gaussian, purple, 15, 0.8, 0, 0);");
@@ -641,55 +792,62 @@ public class EightOffVisualController {
         }
     }
 
+    /**
+     * Asigna el comportamiento al soltar una carta (drop).
+     * Determina si la carta fue soltada sobre una fundacion, tableau o waste zone
+     * e intenta moverla segun las reglas del juego.
+     */
     public void setDragReleased(){
         for(StackPane carta:cartasGraficas){
             carta.setOnMouseReleased(event -> {
                 if(carta == cartaSeleccionada) {
 
+                    // Detecta el contenedor donde se solto la carta
                     VBox contenedorVBox = reachTableauOrFoundation(event);
                     StackPane contenedorStackPane = reachWasteZone(event);
 
                     if(contenedorVBox != null) {
                         undoSave();
-                        // Mover a Foundation
+
+                        // Si se solto sobre una fundacion
                         if(foundations.contains(contenedorVBox)) {
                             int indice = foundations.indexOf(contenedorVBox);
                             FoundationDeck[] foundationDecks = tableroLogico.getFoundationDecks();
                             FoundationDeck fLogico = foundationDecks[indice];
 
-                            // Solo mover la primera carta a Foundation
+                            // Solo se puede mover una carta a la fundacion
                             if(cartasLogicas.size() == 1 &&
                                     fLogico.ingresarCarta(cartasLogicas.get(0))){
                                 removerLogicaOrigen();
                             }
                         }
-                        // Mover a Tableau
+                        // Si se solto sobre un tableau
                         else if(tableaus.contains(contenedorVBox)) {
                             int indice = tableaus.indexOf(contenedorVBox);
                             TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
                             TableauDeck tLogico = tableauDecks[indice];
 
+                            // Intenta insertar la secuencia de cartas
                             if(tLogico.insertarCartas(cartasLogicas)) {
                                 removerLogicaOrigen();
                             }
                         }
                     }
-                    // Mover a WasteZone
+                    // Si se solto sobre una zona de descarte
                     else if(contenedorStackPane != null) {
                         undoSave();
                         int indice = wasteZone.indexOf(contenedorStackPane);
                         WasteZone[] wasteZones = tableroLogico.getWasteZones();
                         WasteZone wLogico = wasteZones[indice];
 
-                        // Solo cartas únicas a WasteZone
+                        // Solo permite mover una carta a la zona de descarte vacia
                         if(cartasLogicas.size() == 1 && wLogico.getCarta() == null){
                             wLogico.setCarta(cartasLogicas.get(0));
                             removerLogicaOrigen();
                         }
                     }
 
-
-                    // Actualizar toda la GUI
+                    // Actualiza toda la interfaz grafica tras el movimiento
                     try {
                         limpiarGUI();
                         actualizarCartas();
@@ -697,10 +855,12 @@ public class EightOffVisualController {
                         e.printStackTrace();
                     }
 
-                    // Limpiar selección
+                    // Limpia la seleccion actual
                     limpiarSeleccion();
                     event.consume();
                 }
+
+                // Verifica condiciones de victoria o derrota
                 if(verificarVictoria()){
                     mostrarMensajeVictoria();
                 }
@@ -711,11 +871,17 @@ public class EightOffVisualController {
         }
     }
 
+    /**
+     * Obtiene una lista de cartas logicas en secuencia a partir de la carta seleccionada.
+     * Busca la carta en los tableaus y retorna todas las cartas que siguen a esa en orden.
+     * Tambien asocia sus representaciones graficas correspondientes.
+     */
     public ListaCircularSimple<CartaInglesa> obtenerCartasEnSecuencia(StackPane carta){
         ListaCircularSimple<CartaInglesa> logicCardsList = new ListaCircularSimple<>();
         TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
         Label labelTop = (Label) carta.lookup("#LabelTop");
 
+        // Busca la carta en cada tableau y extrae las que siguen
         for(int j=0; j<tableauDecks.length; j++) {
             ListaCircularSimple<CartaInglesa> tLogico = tableauDecks[j].getTableau();
             for (int i = 0; i < tLogico.size(); i++) {
@@ -727,6 +893,7 @@ public class EightOffVisualController {
             if(!logicCardsList.isEmpty()) break;
         }
 
+        // Relaciona las cartas logicas con sus graficas
         for(int i = 0; i < logicCardsList.size(); i++){
             for(StackPane c : cartasGraficas){
                 Label label = (Label) c.lookup("#LabelTop");
@@ -740,6 +907,10 @@ public class EightOffVisualController {
         return logicCardsList;
     }
 
+    /**
+     * Identifica el origen logico (tableau o zona) y agrupa las cartas
+     * que forman parte de la secuencia seleccionada para moverlas.
+     */
     private void identificarOrigenYCartas(StackPane carta) {
         cartasSeleccionadas.clear();
         cartasLogicas = new ListaCircularSimple<>();
@@ -747,14 +918,17 @@ public class EightOffVisualController {
         Label labelTop = (Label) carta.lookup("#LabelTop");
         TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
 
+        // Busca la carta seleccionada dentro de los tableaus
         for(int j=0; j<tableauDecks.length; j++) {
             ListaCircularSimple<CartaInglesa> tLogico = tableauDecks[j].getTableau();
             for (int i = 0; i < tLogico.size(); i++) {
                 if (tLogico.get(i).toString().equals(labelTop.getText())) {
+                    // Agrega la carta y las que siguen en secuencia
                     for(int k = i; k < tLogico.size(); k++) {
                         cartasLogicas.insertaFin(tLogico.get(k));
                     }
 
+                    // Busca las versiones graficas de esas cartas
                     for(int m = 0; m < cartasLogicas.size(); m++){
                         for(StackPane c : cartasGraficas){
                             Label label = (Label) c.lookup("#LabelTop");
@@ -769,6 +943,7 @@ public class EightOffVisualController {
             }
         }
 
+        // Si no esta en un tableau, se asume que proviene de una waste zone o fundacion
         CartaInglesa cartaLogica = encontrarCartaSeleccionada(carta);
         if(cartaLogica != null) {
             cartasLogicas.insertaFin(cartaLogica);
@@ -776,27 +951,33 @@ public class EightOffVisualController {
         }
     }
 
-
-
-    // remover de la lógica
+    /**
+     * Elimina las cartas movidas de su contenedor logico de origen.
+     * Determina si la carta proviene de una fundacion, tableau o waste zone
+     * y actualiza la logica del tablero en consecuencia.
+     */
     public void removerLogicaOrigen(){
         if(contenedorOrigen != null){
             Label labelTop = (Label) cartaSeleccionada.lookup("#LabelTop");
 
+            // Si proviene de una waste zone
             if(contenedorOrigen instanceof StackPane){
                 StackPane contenedor = (StackPane) contenedorOrigen;
                 int index = wasteZone.indexOf(contenedor);
                 WasteZone[] wasteZones = tableroLogico.getWasteZones();
                 wasteZones[index].removerCarta();
             }
+            // Si proviene de una fundacion o tableau
             else if (contenedorOrigen instanceof VBox) {
                 VBox vBox = (VBox) contenedorOrigen;
 
+                // Remueve de la fundacion
                 if(foundations.contains(vBox)) {
                     int index = foundations.indexOf(vBox);
                     FoundationDeck[] foundationDecks = tableroLogico.getFoundationDecks();
                     foundationDecks[index].removerUltimaCarta();
                 }
+                // Remueve de un tableau
                 else if(tableaus.contains(vBox)) {
                     int index = tableaus.indexOf(vBox);
                     TableauDeck[] tableauDecks = tableroLogico.getTableauDecks();
